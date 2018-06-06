@@ -7,6 +7,10 @@ pipeline {
         }
     }
 
+    parameters {
+        booleanParam(name: 'PUBLISH', defaultValue: false, description: 'Whether to build and publish artifacts')
+    }
+
     stages {
         stage('Checkout'){
             steps {
@@ -24,6 +28,9 @@ pipeline {
             }
         }
         stage('Publish Test Results'){
+            when {
+                expression { PUBLISH }
+            }
             steps {
                 publishHTML([
                     allowMissing: false,
