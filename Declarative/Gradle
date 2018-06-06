@@ -1,29 +1,40 @@
 
 
 pipeline {
-    stages {
-        stage('Checkout'){
-            git url: "https://github.com/gothinkster/spring-boot-realworld-example-app.git"
-        }
-        stage('Compile'){
-            sh "gradle compileJava"
-        }
-        stage('Test'){
-            sh "gradle test"
-        }
-        stage('Publish Test Results'){
-            publishHTML([
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: false,
-                reportDir: 'build/reports/tests/test',
-                reportFiles: 'index.html',
-                reportName: 'HTML Report',
-                reportTitles: ''
-            ])
+    agent {
+        node {
+            label 'gradle'
         }
     }
 
-
-
+    stages {
+        stage('Checkout'){
+            steps {
+                git url: "https://github.com/gothinkster/spring-boot-realworld-example-app.git"
+            }
+        }
+        stage('Compile'){
+            steps {
+                sh "gradle compileJava"
+            }
+        }
+        stage('Test'){
+            steps {
+                sh "gradle test"
+            }
+        }
+        stage('Publish Test Results'){
+            steps {
+                publishHTML([
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: false,
+                    reportDir: 'build/reports/tests/test',
+                    reportFiles: 'index.html',
+                    reportName: 'HTML Report',
+                    reportTitles: ''
+                ])
+            }
+        }
+    }
 }
